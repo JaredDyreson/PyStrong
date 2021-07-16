@@ -7,7 +7,6 @@ def check_container(container, _type) -> tuple:
 
     If the test fails, return the offending type, false flag and the offending index
     """
-
     if not(hasattr(container, '__iter__')):
         raise ValueError(
             f'expecting container object, received: {type(container).__name__}')
