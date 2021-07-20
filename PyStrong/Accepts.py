@@ -1,8 +1,14 @@
 #!/usr/bin/env python3.9
 
-from PyStrong.Exceptions import InvalidTypeError, MismatchedTypeError, NonUnionizedTypeError
+from PyStrong.Exceptions import InvalidTypeError, MismatchedTypeError, NonUnionizedTypeError, LambdaFunctionFailureError
 import typing
 from PyStrong.HomogenousType import check_container
+
+"""
+Source: https://stackoverflow.com/a/15300191
+This section is heavily built upon this answer on Stackoverflow
+Thank you kind person
+"""
 
 
 def has_union(parameter_types: list) -> bool:
@@ -23,6 +29,7 @@ def check_in_union(parameterized_types: list, types: list) -> bool:
     def func(a: str):
         return a+=" hello"
     """
+
     _ret = False
     for x, (_param, _type) in enumerate(zip(parameterized_types, types)):
         if(isinstance(_param, tuple)):
@@ -47,11 +54,15 @@ def preliminary_type_check(function: typing.Callable, types: tuple) -> tuple[lis
         raise ValueError(
             f'number of parameters({_len_params}) does not match number of types ({_len_types})')
     has_unionization = check_in_union(parameter_types, types)
-    print(parameter_types, types)
-    if(parameter_types != types):
-        # for(param,  _type) in zip(parameter_types, types):
-        # if(not check_in_union(param, types) or
-        # (param != _type)):
+    condition = True
+    for (_parameter, _type) in zip(parameter_types, types):
+        if(isinstance(_type, tuple)):
+            if(_parameter not in _type):
+                condition = False
+        elif not(_parameter == _type):
+            condition = False
+
+    if not(condition):
         raise MismatchedTypeError(
             f'types given in accepts{types} does not match function declaration: {function.__name__}({parameter_types})')
 
@@ -71,7 +82,7 @@ def is_nested_generic(_type) -> bool:
     return False
 
 
-def accepts(*types):
+def accepts(*types, **lambdas):
     """
     A series of types that can be accepted in the
     function declaration
@@ -100,6 +111,14 @@ def accepts(*types):
                         message = f'arg ({argument} => {type(argument).__name__}) does not match type(s) {_type}'
                         raise InvalidTypeError(message)
             args = save_state
+
+            for (_test_name, container) in lambdas.items():
+                index, function = container
+                _value = save_state[index]
+                if not(function(_value)):
+                    raise LambdaFunctionFailureError(
+                        f'test {_test_name} on index {index} has failed')
+
             return __original_function(*args, **kwds)
         new_function.__name__ = __original_function.__name__
         return new_function

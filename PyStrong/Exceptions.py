@@ -54,3 +54,39 @@ class NestedGenericError(PyStrongBaseException):
 
     def __init__(self, message: str):
         super().__init__(message)
+
+
+class MalformedLambdaExpressionError(PyStrongBaseException):
+    """
+    Exception raised if the lambda function given does not
+    conform to the following structure:
+
+    tuple[int, types.Callable]
+
+    Example of such:
+
+    @accepts(int, ensure_small_int=(lambda x: x < 100))
+    def func(a: int):
+        return a - 100
+
+    Index not specified
+    """
+
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class LambdaFunctionFailureError(PyStrongBaseException):
+    """
+    Exception if the function pointer given fails
+
+    Example:
+
+    @accepts(int, ensure_small_int=(0, lambda x: x < 100))
+    def func(a: int):
+        return a - 100
+    func(100)
+    """
+
+    def __init__(self, message: str):
+        super().__init__(message)
