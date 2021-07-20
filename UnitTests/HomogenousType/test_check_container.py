@@ -1,4 +1,4 @@
-from TypeEnforcer.HomogenousType import check_container
+from PyStrong.HomogenousType import check_container
 
 
 class TestCheckContainer(unittest.TestCase):

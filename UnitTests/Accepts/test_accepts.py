@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.9
 
-from TypeEnforcer.Accepts import accepts
-from TypeEnforcer.Exceptions import InvalidTypeError, MismatchedTypeError
+from PyStrong.Accepts import accepts
+from PyStrong.Exceptions import InvalidTypeError, MismatchedTypeError
 
 import unittest
 

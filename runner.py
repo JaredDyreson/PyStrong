@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from TypeEnforcer.UnitTestOrchestrator import TypeEnforceRunner
+from PyStrong.UnitTestOrchestrator import TypeEnforceRunner
 
 import argparse
 import pathlib

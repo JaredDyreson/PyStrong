@@ -1,4 +1,4 @@
-from TypeEnforcer.Accepts import accepts
+from PyStrong.Accepts import accepts
 import typing
 
 
