@@ -7,7 +7,6 @@ import unittest
 
 
 class TypingAcceptsTest(unittest.TestCase):
-    @unittest.skip("")
     def test_clean_types(self):
         """
         Types inside the decorator match with the
@@ -19,7 +18,6 @@ class TypingAcceptsTest(unittest.TestCase):
             return a + b
         _resultant = func(1, 1)
 
-    @unittest.skip("")
     def test_dirty_types(self):
         """
         Same as test above, however the functinon
@@ -32,7 +30,6 @@ class TypingAcceptsTest(unittest.TestCase):
                 return None
             func(1, 1)
 
-    @unittest.skip("")
     def test_mismatched_decorator(self):
         """
         Types inside the decorator do not match the
@@ -49,6 +46,7 @@ class TypingAcceptsTest(unittest.TestCase):
         def func(a: int):
             return a + 1
 
+    @unittest.skip("")
     def test_homogenous_type(self):
         @accepts(list[str])
         def func(a: list[str]):
@@ -56,9 +54,11 @@ class TypingAcceptsTest(unittest.TestCase):
 
         func(["jared", "dyreson"])
 
+    @unittest.skip("")
     def test_non_homogenous_type(self):
-        @accepts(list[str])
-        def func(a: list[str]):
-            return None
+        with self.assertRaises(MismatchedTypeError):
+            @accepts(list[str])
+            def func(a: list[str]):
+                return None
 
-        func(["jared", 1])
+            func(["jared", 1])
